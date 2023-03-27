@@ -46,13 +46,13 @@ class Player:
         return Player.fetch(username, plainPassword)
 
 
-    def __init__(self, result):
-        self.__id = result["id"]
-        self.__username = result['username']
-        self.__hashPassword = result['password']
-        self.__rating = Rating(result['skillMu'], result['skillSigma'])
-        self.__sid = result['sid']
-        self.__partner = result['partner']
+    def __init__(self, dbDict):
+        self.__id = dbDict["id"]
+        self.__username = dbDict['username']
+        self.__hashPassword = dbDict['password']
+        self.__rating = Rating(dbDict['skillMu'], dbDict['skillSigma'])
+        self.__sid = dbDict['sid']
+        self.__partner = dbDict['partner']
 
     def __repr__(self):
         return str(self)
