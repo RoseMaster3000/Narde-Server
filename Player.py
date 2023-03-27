@@ -45,7 +45,6 @@ class Player:
         pid = querySQL(query, username, hashPassword)
         return Player.fetch(username, plainPassword)
 
-
     def __init__(self, dbDict):
         self.__id = dbDict["id"]
         self.__username = dbDict['username']
@@ -122,7 +121,6 @@ class Player:
         self.__partner = value
         querySQL("UPDATE players SET partner = ? WHERE id = ?", self.partner, self.id)    
 
-
     #####################
     # MATCHMAKING
     #####################
@@ -134,8 +132,6 @@ class Player:
     # have this player win (defeat another player)
     def defeatPlayer(self, losingPlayer):
         self.rating, losingPlayer.rating = rate_1vs1(self.rating, losingPlayer.rating)
-
-
 
 
 # Unit Tests
