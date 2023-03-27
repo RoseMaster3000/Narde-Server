@@ -28,29 +28,31 @@ def querySQL(query, *data):
         else:
             res = cursor.execute(query, data)
         # return query result (contextually)
-        if "insert" in query:
+        if "insert" in qry:
             connection.commit()
             return cursor.lastrowid
         elif ("select" or "show tables") in qry:
             result = res.fetchall()
             if "limit 1" in qry and len(result)>0:
                 return result[0]
-            return result
+            elif "limit 1" in qry and len(result)==0:
+                return None
+            else:
+                return result
         else:
             connection.commit()
             return None
     # handle errors
     except Exception as error:
-        print("\tDATABASE ERROR")
-        print(error)
-        print("\tDURING:")
-        print(query)
-        raise error
+        print()
+        print(f"DATABASE ERROR:")
+        print(f"  [?] {query}")
+        print(f"  [!] {error.args[0]}")
+        print()
         return []
     # close
     finally:
         connection.close()
-
 
 
 def listTables():
