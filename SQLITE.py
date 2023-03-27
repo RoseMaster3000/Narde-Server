@@ -2,8 +2,7 @@ import sqlite3
 DBFILE = "Narde.db"
 
 
-def getConnection(dbFile=None):
-    if dbFile==None: dbFile=DBFILE
+def getConnection():
     connection = sqlite3.connect(DBFILE)
     connection.row_factory = dict_factory
     return connection
@@ -17,22 +16,22 @@ def dict_factory(cursor, row):
 
 
 def querySQL(query, *data):
+    qry = query.lower()
     connection = getConnection()
     cursor = connection.cursor()
     try:
-        # run command
+        # run query
         if len(data)==0 or data[0]==None:
             res = cursor.execute(query)
         elif type(data[0])==tuple:
             res = cursor.execute(query, data[0])
         else:
             res = cursor.execute(query, data)
-        # handle aftermath
-        qry = query.lower()
-        if qry.find("insert") >= 0:
+        # return query result (contextually)
+        if "insert" in query:
             connection.commit()
             return cursor.lastrowid
-        elif qry.find("select") >= 0 or "tables" in qry:
+        elif ("select" or "show tables") in qry:
             result = res.fetchall()
             if "limit 1" in qry and len(result)>0:
                 return result[0]
