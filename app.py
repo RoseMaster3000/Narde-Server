@@ -1,7 +1,7 @@
 import socketio
 from decorators import login_required
 
-sio = socketio.AsyncServer(async_mode='asgi', cors_allowed_origins=["https://www.piesocket.com"])
+sio = socketio.AsyncServer(async_mode='asgi')
 app = socketio.ASGIApp(sio)
 
 @sio.event
