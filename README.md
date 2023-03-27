@@ -18,14 +18,14 @@ If you have not already, install the following
 
 
 ### Deployment
-* Free: [PythonAnywhere])https://www.pythonanywhere.com/user/rosemaster3000/)
+* Free: [PythonAnywhere](https://www.pythonanywhere.com/user/rosemaster3000/)
 * Paid: [Google Cloud Platform](https://console.cloud.google.com/)
 
 
 ### Documentation
 * [Python Socket.io - Transport Protocol](https://python-socketio.readthedocs.io/en/latest/intro.html) 
+* [SQLite3 - Database](https://docs.python.org/3/library/sqlite3.html)
 * [TrueSkill - Matchmaking Algorithm](https://trueskill.org/)
-
 
 # Author
 | Shahrose Kasim |             |
