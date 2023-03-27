@@ -1,6 +1,5 @@
 # Overview
-Server for [Narde Unity Game](https://github.com/liormushiev/Narde).
-
+This is the dedicated server source code for the [Narde Unity Game](https://github.com/liormushiev/Narde).
 
 ### Installation
 If you have not already, install the following
@@ -10,7 +9,7 @@ If you have not already, install the following
 
 
 ### Setup
-1. Clone this repo `git clone <repo://url>`
+1. Clone this repo `git clone git@github.com:RoseMaster3000/Narde-Server.git`
 2. Activate git LFS `git lfs install`
 3. Clone Large Files `git lfs pull`
 4. First time setup `source setup.sh`
