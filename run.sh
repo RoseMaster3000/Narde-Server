@@ -1,2 +1,2 @@
 source virt/bin/activate
-python app.py
+gunicorn -k eventlet -w 1 module:app
