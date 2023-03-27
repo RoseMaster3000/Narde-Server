@@ -1,6 +1,6 @@
 import socketio
 from functools import wraps
-from SQLITE import querySQL
+from database import querySQL
 
 def login_required(f):
     @wraps(f)
