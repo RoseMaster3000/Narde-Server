@@ -1,4 +1,4 @@
-from SQLITE import querySQL
+from database import querySQL
 from trueskill import Rating, rate_1vs1, quality_1vs1
 import bcrypt
 ALPHANUM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
@@ -147,4 +147,4 @@ if __name__ == "__main__":
     assert Player.fetch("faker") == "User does not exist"
     assert Player.fetch("shahrose", "WrongPassword") == "Password is incorrect"
 
-    print("All Tests Passed!")
+    print("All <Player> Unit Tests Passed!")
