@@ -15,6 +15,8 @@ If you have not already, install the following
 
 
 ### Deployment
+* [Socket.io Deployment Strategies](https://python-socketio.readthedocs.io/en/latest/server.html#deployment-strategies)
+* [Socket.io Dummy Client](https://www.piesocket.com/socketio-tester)
 * Free: [PythonAnywhere](https://www.pythonanywhere.com/user/rosemaster3000/)
 * Paid: [Google Cloud Platform](https://console.cloud.google.com/)
 
