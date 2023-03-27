@@ -1,6 +1,6 @@
 # personal ignores
 *.sublime-workspace
-
+*.db
 
 
 # large build files
