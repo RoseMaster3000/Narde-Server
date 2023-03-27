@@ -50,13 +50,21 @@ class Player:
         return f"<Player:{self.username}:{self.id}>"
 
     def print(self):
-        self.qprint("Self")
-        if partner!=None:
-            self.partner.qprint("Partner")
+        self.qprint()
+        if self.partner!=None:
+            self.partner.qprint(False)
 
-    def qprint(self, label):
-        print("{label:<10}: {self.username:<20} ({self.rating.mu:.0f}, {self.rating.sigma:.2f})")
-        print("          {self.sid}")
+    def qprint(self, line=True):
+        if line:
+            print(f"{self.username:─^27}")
+        else:
+            print(f"{self.username:^27}")
+        if self.sid==None:
+            print(f"    id: {self.id}   │    sid: ⁿₐ")
+        else:
+            print(f"    id: {self.id}   │    sid: {self.sid}")
+        print(f"    mu: {self.rating.mu:.0f}  │  sigma: {self.rating.sigma:.3f}")
+        
     #####################
     # PROPERTIES
     #####################
@@ -117,4 +125,4 @@ class Player:
 if __name__ == "__main__":
     Player.initTable()    
     Player.create("shahrose", "SuperSecretPass")
-    print( Player.verify("shahrose", "SuperSecretPass")[1] )
+    Player.verify("shahrose", "SuperSecretPass")[1].print()
