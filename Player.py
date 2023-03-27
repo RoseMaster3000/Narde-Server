@@ -17,7 +17,7 @@ class Player:
             "skillMu REAL DEFAULT 25.000,"
             "skillSigma REAL DEFAULT 8.333,"
             "sid VARCHAR(64) DEFAULT NULL,"
-            'partner VARCHAR(64) DEFAULT NULL'
+            "partner VARCHAR(64) DEFAULT NULL"
             ");"
         ))
 
