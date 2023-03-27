@@ -11,12 +11,16 @@ If you have not already, install the following
 ### Setup
 1. Clone this repo `git clone git@github.com:RoseMaster3000/Narde-Server.git`
 2. First time setup `source setup.sh`
-3. Run `source run.sh`
+3. Run `source run.sh` or `source test.sh`
 
+### Testing with Postman
+1. Install Postmant `paru postman-bin` or download [here](https://www.postman.com/downloads/)
+2. From `Workspaces`, Click `New` in the left side-bar
+3. Choose `Websocket Request`
+4. Change dropdown from `Raw` to `Socket.io`
+5. Connect, test events, etc.
 
 ### Deployment
-* [Socket.io Deployment Strategies](https://python-socketio.readthedocs.io/en/latest/server.html#deployment-strategies)
-* [Socket.io Dummy Client](https://www.piesocket.com/socketio-tester)
 * Free: [PythonAnywhere](https://www.pythonanywhere.com/user/rosemaster3000/)
 * Paid: [Google Cloud Platform](https://console.cloud.google.com/)
 
