@@ -15,7 +15,7 @@ If you have not already, install the following
 
 ### Testing with Postman
 1. Install Postman `paru postman-bin` or download [here](https://www.postman.com/downloads/)
-2. From `Workspaces`, Click `New` in the left side-bar
+2. From `Workspaces`, click `New` in the left side-bar
 3. Choose `Websocket Request`
 4. Change dropdown from `Raw` to `Socket.io`
 5. Connect, test events, etc.
