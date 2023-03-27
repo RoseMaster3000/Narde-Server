@@ -14,7 +14,7 @@ If you have not already, install the following
 3. Run `source run.sh` or `source test.sh`
 
 ### Testing with Postman
-1. Install Postmant `paru postman-bin` or download [here](https://www.postman.com/downloads/)
+1. Install Postman `paru postman-bin` or download [here](https://www.postman.com/downloads/)
 2. From `Workspaces`, Click `New` in the left side-bar
 3. Choose `Websocket Request`
 4. Change dropdown from `Raw` to `Socket.io`
