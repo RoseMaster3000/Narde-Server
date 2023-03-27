@@ -1,6 +1,8 @@
 from SQLITE import querySQL
 from trueskill import Rating, rate_1vs1, quality_1vs1
 import bcrypt
+ALPHANUM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+
 
 class Player:
     # create Player user table (sqlite) 
@@ -19,25 +21,31 @@ class Player:
             ");"
         ))
 
-    # see if player exists / return it
+    # Fetch Player from database (also validates password if provided)
+    # if search fails, returns error <String>
     @classmethod
-    def verify(cls, username, plainPassword):
+    def fetch(cls, username, plainPassword=None):
         result = querySQL("SELECT * FROM players WHERE username = ? LIMIT 1", username)
-        if len(result)==0:
-            False, "User does not exist."
-        if not bcrypt.checkpw(plainPassword, result["password"]):
-            False, "Password is incorrect."
-        return True, cls(result)
+        if result==None:
+            return "User does not exist"
+        if plainPassword!=None and not bcrypt.checkpw(plainPassword, result["password"]):
+            return "Password is incorrect"
+        return cls(result)
 
-    # Create Player in database
-    @classmethod
-    def create(cls, username, plainPassword):
+    # Create/Fetch Player in database
+    # if creation fails, returns error <String>
+    @staticmethod
+    def create(username, plainPassword):
+        if any([(char not in ALPHANUM) for char in username]):
+            return "Username must be alphanumeric"
+        if type(Player.fetch(username))==Player:
+            return "User already exists"
         hashPassword = bcrypt.hashpw(plainPassword, bcrypt.gensalt())
         query = "INSERT INTO players (username, password) VALUES (?,?);"
         pid = querySQL(query, username, hashPassword)
-        print(pid)
+        return Player.fetch(username, plainPassword)
 
-    # constructor
+
     def __init__(self, result):
         self.__id = result["id"]
         self.__username = result['username']
@@ -47,24 +55,27 @@ class Player:
         self.__partner = result['partner']
 
     def __repr__(self):
+        return str(self)
+
+    def __str__(self):
         return f"<Player:{self.username}:{self.id}>"
 
     def print(self):
-        self.qprint()
+        self.printTable()
         if self.partner!=None:
-            self.partner.qprint(False)
+            self.partner.printTable(False)
 
-    def qprint(self, line=True):
+    def printTable(self, line=True):
         if line:
             print(f"{self.username:─^27}")
         else:
             print(f"{self.username:^27}")
-        if self.sid==None:
-            print(f"    id: {self.id}   │    sid: ⁿₐ")
+        print(f"    mu: {self.rating.mu:.0f}   │   id: {self.id}")
+        if self.sid!=None:
+            print(f" sigma: {self.rating.sigma:.1f}  │  sid: {self.sid}")
         else:
-            print(f"    id: {self.id}   │    sid: {self.sid}")
-        print(f"    mu: {self.rating.mu:.0f}  │  sigma: {self.rating.sigma:.3f}")
-        
+            print(f" sigma: {self.rating.sigma:.1f}  │  sid:")
+    
     #####################
     # PROPERTIES
     #####################
@@ -77,8 +88,13 @@ class Player:
 
     @property
     def hashPassword(self): return self.__hashPassword
+
     @property
-    def password(self): return self.__hashPassword
+    def password(self): raise AttributeError("<Player.password> is not directly stored for security purposes.")
+    @password.setter
+    def password(self, value):
+        self.__hashPassword = bcrypt.hashpw(value, bcrypt.gensalt())
+        querySQL("UPDATE players SET password = ? WHERE id = ?", self.__hashPassword, self.id)  
 
     @property
     def rating(self): return self.__rating
@@ -111,9 +127,9 @@ class Player:
     # MATCHMAKING
     #####################
 
-    # see matchmaking compatability
+    # see matchmaking compatability (0 ~ 1, higher the better)
     def getCompatability(self, otherPlayer):
-        quality_1vs1(self.rating, otherPlayer.rating)
+        return quality_1vs1(self.rating, otherPlayer.rating)
 
     # have this player win (defeat another player)
     def defeatPlayer(self, losingPlayer):
@@ -121,8 +137,18 @@ class Player:
 
 
 
-# initialize Tables
+
+# Unit Tests
 if __name__ == "__main__":
     Player.initTable()    
-    Player.create("shahrose", "SuperSecretPass")
-    Player.verify("shahrose", "SuperSecretPass")[1].print()
+    assert str(Player.create("shahrose", "SuperSecretPass")) == "<Player:shahrose:1>"
+    assert str(Player.create("person", "SuperSecretPass")) == "<Player:person:2>"
+    
+    assert Player.create("shahrose", "SuperSecretPass") == "User already exists"
+    assert Player.create("Raúl", "123456") == "Username must be alphanumeric"
+
+    assert str(Player.fetch("shahrose", "SuperSecretPass")) == "<Player:shahrose:1>"
+    assert Player.fetch("faker") == "User does not exist"
+    assert Player.fetch("shahrose", "WrongPassword") == "Password is incorrect"
+
+    print("All Tests Passed!")
