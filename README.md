@@ -1,6 +1,7 @@
 # Overview
 This is the dedicated server source code for the [Narde Unity Game](https://github.com/liormushiev/Narde).
 
+
 ### Installation
 If you have not already, install the following
 * Install Python `paru python` or download [here](https://www.python.org/downloads/)
@@ -11,7 +12,9 @@ If you have not already, install the following
 ### Setup
 1. Clone this repo `git clone git@github.com:RoseMaster3000/Narde-Server.git`
 2. First time setup `source setup.sh`
-3. Run `source run.sh` or `source test.sh`
+3. Run `source test.sh` for development
+3. Run `source run.sh` for production
+
 
 ### Testing with Postman
 1. Install Postman `paru postman-bin` or download [here](https://www.postman.com/downloads/)
@@ -19,6 +22,7 @@ If you have not already, install the following
 3. Choose `Websocket Request`
 4. Change dropdown from `Raw` to `Socket.io`
 5. Connect, test events, etc.
+
 
 ### Deployment
 * Free: [PythonAnywhere](https://www.pythonanywhere.com/user/rosemaster3000/)
@@ -29,6 +33,9 @@ If you have not already, install the following
 * [Python Socket.io - Transport Protocol](https://python-socketio.readthedocs.io/en/latest/intro.html) 
 * [SQLite3 - Database](https://docs.python.org/3/library/sqlite3.html)
 * [TrueSkill - Matchmaking Algorithm](https://trueskill.org/)
+* [Uvicorn - ASGI Server](https://www.uvicorn.org/)
+* [Gunicorn - WSGI Server](https://gunicorn.org/)
+
 
 # Author
 | Shahrose Kasim |             |

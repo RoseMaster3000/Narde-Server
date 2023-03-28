@@ -1,2 +1,2 @@
 source virt/bin/activate
-python app-async.py
+uvicorn app:app --reload --port 8000
