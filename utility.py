@@ -5,6 +5,4 @@ END = '\033[0m'
 
 def debug(*args):
     print(f'{CYAN}DEBUG{END}:    ', end='')
-    for a in args:
-        print(a, end=" ")
-    print()
+    print(args)
