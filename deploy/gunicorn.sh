@@ -1,4 +1,4 @@
 sudo cp deploy/narde.service /etc/systemd/system/narde.service
-systemctl start narde
-systemctl enable narde
-systemctl status narde
+sudo systemctl start narde
+sudo systemctl enable narde
+sudo systemctl status narde
