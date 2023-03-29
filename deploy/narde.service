@@ -1,0 +1,13 @@
+[Unit]
+Description=Narde-Gunicorn-Daemon
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/home/shahrose/Narde-Server
+Environment="PATH=/home/shahrose/Narde-Server"
+ExecStart=/home/shahrose/Narde-Server/virt/bin/gunicorn -k uvicorn.workers.UvicornWorker -w 1 -b localhost:8080 app:app
+
+[Install]
+WantedBy=multi-user.target
