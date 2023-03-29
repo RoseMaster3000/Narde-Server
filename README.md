@@ -23,16 +23,21 @@ If you have not already, install the following
 4. Change dropdown from `Raw` to `Socket.io`
 5. Connect, test events, etc.
 
-# Deployment
-### Gunicorn + NGINX
+# Server Deployment
+### Initialization
 1. Proofread `deploy/narde.service`, modify as needed
 2. Install Gunicorn service `source deploy/gunicorn.sh`
 3. Proofread `deploy/nginx.conf`, modify as needed
-4. Install NGINX with `source deploy/nginx.sh`
+4. Install NginX with `source deploy/nginx.sh`
 5. (optional) Install SSL (https://) with `source deploy/certbot.sh`
 6. (optional) Install Firewall with `source deploy/firewall.sh`
 
-### VPS Solutions
+### Maintenance
+* Update & Restart server `source deploy/update.sh`
+* Stop Server `source deploy/stop.sh`
+* Start Server `source deploy/start.sh`
+
+### VPS Providers
 * Low End [Hostinger](https://www.hostinger.com/vps-hosting) ($4/month)
 * High End [Google Cloud Platform](https://console.cloud.google.com/) ($30+/month)
 
@@ -43,7 +48,7 @@ If you have not already, install the following
 * [SQLite3 - Database](https://docs.python.org/3/library/sqlite3.html)
 * [TrueSkill - Matchmaking Algorithm](https://trueskill.org/)
 * [Uvicorn - ASGI Server](https://www.uvicorn.org/)
-* [Gunicorn - WSGI Server](https://gunicorn.org/)
+* [Gunicorn - WSGI Server](https://gunicorn.org/#docs)
 * [NginX - Reverse Proxy Server](https://socket.io/docs/v3/reverse-proxy/#nginx) 
 
 ### Author
