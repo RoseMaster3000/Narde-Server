@@ -1,5 +1,5 @@
-sudo apt update
-sudo apt install ufw
+sudo apt-get update
+sudo apt-get install ufw
 sudo ufw default allow outgoing
 sudo ufw default deny incoming
 sudo ufw allow 'Nginx HTTPS'          # HTTPS/HTTP/Full
