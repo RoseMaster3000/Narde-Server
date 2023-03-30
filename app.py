@@ -1,40 +1,84 @@
 import socketio
-from decorators import login_required
-from utility import debug
+from decorators import login_required, anon_required
+from utility import debug as print
+from Player import Player
 
+
+Player.startTable()
 sio = socketio.AsyncServer(async_mode='asgi')
 app = socketio.ASGIApp(sio)
 
+# verify dictionary contains a list keys (returns True if all keys exist)
+def verifyDict(dictionary, *args):
+    return not any([(arg not in dictionary) for arg in args])
+
+
 @sio.event
 async def connect(sid, environ):
-    debug('connect   ', sid)
+    print('connect   ', sid)
 
 @sio.event
 async def disconnect(sid):
-    debug('disconnect', sid)
+    player = Player.get(sid)
+    if player is not None: player.sid = None
+    print('disconnect', sid)
+
+
+@sio.event
+@anon_required
+async def login(sid, data):
+    # bad request
+    if not verifyDict(data, "username", "password"):
+        return 422, "[login] event requires [username] and [password] fields"
+    # login error
+    player = Player.fetch(data["username"], data["password"])
+    if type(player)!=Player:
+        return 401, player
+    # login success
+    player.sid = sid
+    print(f"{player} has logged in")
+    return 200, "Login Successful"
 
 
 @sio.event
 @login_required
+async def logout(sid, data, player):
+    player.sid = None
+
+
+@sio.event
+@login_required
+async def whoami(sid, data, player):
+    await sio.emit(
+        event = 'name',
+        to = sid,
+        data = {'username': player.username},
+        callback = nameConfirm
+    )
+    
+
+def nameConfirm(*args):
+    print("[name] event confirmed by client")
+    print(args)
+
+
+
+
+
+@sio.event
 async def message(sid, data):
-    debug('message:', data)
-
-    # session = await sio.get_session(sid)
-    # debug('message from ', session['username'])
-
-
+    print('message:', data)
 
 @sio.on('*')
 async def catchAll(event, sid, data):
-    debug("[?]", f"({event})", data)
+    print("[?]", f"({event})", data)
 
 
 
-# @sio.event
-# @login_required
-# def whoAmI(sid, data):
-#     print(sid)
-#     sio.emit('youAre', {'data': sid})
+# https://www.youtube.com/watch?v=tHQvTOcx_Ys
+# https://python-socketio.readthedocs.io/en/latest/api.html#socketio.Server.emit
+# https://python-socketio.readthedocs.io/en/latest/server.html#event-callbacks
+# https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
 
 
 # @sio.event
@@ -46,20 +90,3 @@ async def catchAll(event, sid, data):
 #         room='cool_room'
 #     )
 #     sio.leave_room(sid, 'cool_room')
-
-
-
-
-
-
-# https://python-socketio.readthedocs.io/en/latest/server.html#event-callbacks
-
-# https://python-socketio.readthedocs.io/en/latest/server.html#user-sessions
-# @sio.event
-# async def connect(sid, environ):
-#     username = authenticate_user(environ)
-#     await sio.save_session(sid, {'username': username})
-
-
-
-# https://www.youtube.com/watch?v=tHQvTOcx_Ys
