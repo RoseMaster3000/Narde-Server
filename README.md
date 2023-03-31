@@ -33,9 +33,9 @@ If you have not already, install the following
 6. (optional) Install Firewall with `source deploy/firewall.sh`
 
 ### Maintenance
-* Update & Restart server `source deploy/update.sh`
-* Stop Server `source deploy/stop.sh`
 * Start Server `source deploy/start.sh`
+* Stop Server `source deploy/stop.sh`
+* Update server `source deploy/update.sh`
 
 ### VPS Providers
 * Low End [Hostinger](https://www.hostinger.com/vps-hosting) ($4/month)
@@ -48,7 +48,7 @@ If you have not already, install the following
 * [SQLite3 - Database](https://docs.python.org/3/library/sqlite3.html)
 * [TrueSkill - Matchmaking Algorithm](https://trueskill.org/)
 * [Uvicorn - ASGI Server](https://www.uvicorn.org/)
-* [Gunicorn - WSGI Server](https://gunicorn.org/#docs)
+* [Gunicorn - WSGI Server](https://docs.gunicorn.org/en/stable/design.html)
 * [NginX - Reverse Proxy Server](https://socket.io/docs/v3/reverse-proxy/#nginx) 
 
 ### Author
