@@ -31,15 +31,17 @@ def dict_factory(cursor, row):
 
 
 def querySQL(query, *data):
+    # validate / sanatize args
+    if len(data)==1 and type(data[0])==list: data = tuple(data[0])
+    if type(data)!=tuple: raise ValueError("querySQL expects arbitrarty args (*args)")
     qry = query.lower()
+    # connect
     connection = getConnection()
     cursor = connection.cursor()
     try:
         # run query
-        if len(data)==0 or data[0]==None:
+        if len(data)==0:
             res = cursor.execute(query)
-        elif type(data[0])==tuple:
-            res = cursor.execute(query, data[0])
         else:
             res = cursor.execute(query, data)
         # return query result (contextually)
@@ -59,11 +61,10 @@ def querySQL(query, *data):
             return None
     # handle errors
     except Exception as error:
-        print()
-        print(f"DATABASE ERROR:")
-        print(f"  [?] {query}")
-        print(f"  [!] {error.args[0]}")
-        print()
+        warning(f"DATABASE ERROR:")
+        warning(f"{query}")
+        warning(f"{error.args[0]}")
+        warning(getException())
         return []
     # close
     finally:
