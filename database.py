@@ -1,5 +1,20 @@
 import sqlite3
+from sys import exc_info
 DBFILE = "Narde.db"
+
+def getException():
+    _, _, tb = exc_info()
+    f = tb.tb_frame
+    fileName = f.f_code.co_filename
+    lineNum = tb.tb_lineno
+    return '{} : {}'.format(fileName, lineNum)
+
+
+def warning(*args):
+    RED = '\033[0;31m'
+    END = '\033[0m'
+    print(f'{RED}ERROR{END}:    ', end='')
+    print(*args)
 
 
 def getConnection():
