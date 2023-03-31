@@ -8,7 +8,7 @@ Player.startTable()
 sio = socketio.AsyncServer(async_mode='asgi')
 app = socketio.ASGIApp(sio)
 
-# verify dictionary contains a list keys (returns True if all keys exist)
+# verify dictionary contains specified keys (returns True if all keys exist)
 def verifyDict(dictionary, *args):
     return not any([(arg not in dictionary) for arg in args])
 
@@ -36,7 +36,6 @@ async def login(sid, data):
         return 401, player
     # login success
     player.sid = sid
-    print(f"{player} has logged in")
     return 200, "Login Successful"
 
 
@@ -58,10 +57,7 @@ async def whoami(sid, data, player):
     
 
 def nameConfirm(*args):
-    print("[name] event confirmed by client")
-    print(args)
-
-
+    print("[name] event acknowledged by client:", args)
 
 
 
