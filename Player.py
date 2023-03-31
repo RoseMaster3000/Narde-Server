@@ -5,12 +5,17 @@ ALPHANUM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
 
 class Player:
-    # create Player user table (sqlite) 
+    # reset Player use table
     @staticmethod
-    def initTable():
+    def resetTable():
         querySQL("DROP TABLE IF EXISTS players;")
+        Player.createTable()
+
+    # create Player user table 
+    @staticmethod
+    def createTable():
         querySQL((
-            "CREATE TABLE players ("
+            "CREATE TABLE IF NOT EXISTS players ("
             "id INTEGER PRIMARY KEY,"
             "username VARCHAR(64) UNIQUE NOT NULL,"
             "password VARCHAR(64) NOT NULL,"
@@ -20,8 +25,22 @@ class Player:
             "partner VARCHAR(64) DEFAULT NULL"
             ");"
         ))
+        Player.create("shahrose", "123456")
 
-    # Fetch Player from database (also validates password if provided)
+    # reset ephemeral Player columns (on server startup)
+    @staticmethod
+    def startTable():
+        Player.createTable()
+        querySQL("UPDATE players SET sid = NULL, partner = NULL;")
+
+    # get player by socket.io ID
+    @classmethod
+    def get(cls, sid):
+        result = querySQL("SELECT * FROM players WHERE sid = ? LIMIT 1;", sid)
+        if result==None: return None
+        return cls(result)
+
+    # Fetch Player by username (also validates password if provided)
     # if search fails, returns error <String>
     @classmethod
     def fetch(cls, username, plainPassword=None):
@@ -134,15 +153,18 @@ class Player:
         self.rating, losingPlayer.rating = rate_1vs1(self.rating, losingPlayer.rating)
 
 
+
+
 # Unit Tests
 if __name__ == "__main__":
-    Player.initTable()    
+    Player.startTable()
+    
     assert str(Player.create("shahrose", "SuperSecretPass")) == "<Player:shahrose:1>"
     assert str(Player.create("person", "SuperSecretPass")) == "<Player:person:2>"
-    
+
     assert Player.create("shahrose", "SuperSecretPass") == "User already exists"
     assert Player.create("Raúl", "123456") == "Username must be alphanumeric"
-
+    
     assert str(Player.fetch("shahrose", "SuperSecretPass")) == "<Player:shahrose:1>"
     assert Player.fetch("faker") == "User does not exist"
     assert Player.fetch("shahrose", "WrongPassword") == "Password is incorrect"
