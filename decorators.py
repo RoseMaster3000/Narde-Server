@@ -7,7 +7,7 @@ def login_required(f):
         sid = args[0]
         player = Player.get(sid)
         if player == None:
-            return 401, 'authentication required'
+            return {"status":401, "reason":'authentication required'}
         args = (*args, player)
         return await f(*args, **kwargs)
     return wrapper
@@ -18,6 +18,6 @@ def anon_required(f):
         sid = args[0]
         player = Player.get(sid)
         if player != None:
-            return 401, 'anonymity required'
+            return {"status":401, "reason":'anonymity required'}
         return await f(*args, **kwargs)
     return wrapper

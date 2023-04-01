@@ -10,6 +10,7 @@ app = socketio.ASGIApp(sio)
 
 # verify dictionary contains specified keys (returns True if all keys exist)
 def verifyDict(dictionary, *args):
+    if type(dictionary)!=dict: return False
     return not any([(arg not in dictionary) for arg in args])
 
 
@@ -27,16 +28,17 @@ async def disconnect(sid):
 @sio.event
 @anon_required
 async def login(sid, data):
+    print(f"{type(data)}  :  {data}")
     # bad request
     if not verifyDict(data, "username", "password"):
-        return 422, "[login] event requires [username] and [password] fields"
+        return {"status":422, "reason":"[login] event requires [username] and [password] fields"}
     # login error
     player = Player.fetch(data["username"], data["password"])
     if type(player)!=Player:
-        return 401, player
+        return {"status":401, "reason":player}
     # login success
     player.sid = sid
-    return 200, "Login Successful"
+    return {"status":200, "reason":"Login Successful"}
 
 
 @sio.event
