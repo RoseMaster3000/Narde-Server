@@ -1,5 +1,5 @@
 import socketio
-from decorators import login_required, anon_required
+from decorators import login_required, anon_required, data_required
 from utility import debug as print
 from Player import Player
 
@@ -14,16 +14,10 @@ app = socketio.ASGIApp(
 )
 
 
-
-# verify dictionary contains specified keys (returns True if all keys exist)
-def verifyDict(dictionary, *args):
-    if type(dictionary)!=dict: return False
-    return not any([(arg not in dictionary) for arg in args])
-
-
 @sio.event
 async def connect(sid, environ):
     print('connect   ', sid)
+
 
 @sio.event
 async def disconnect(sid):
@@ -34,11 +28,8 @@ async def disconnect(sid):
 
 @sio.event
 @anon_required
+@data_required("username", "password")
 async def login(sid, data):
-    print(f"{type(data)}  :  {data}")
-    # bad request
-    if not verifyDict(data, "username", "password"):
-        return {"status":422, "reason":"[login] event requires [username] and [password] fields"}
     # login error
     player = Player.fetch(data["username"], data["password"])
     if type(player)!=Player:
@@ -46,6 +37,17 @@ async def login(sid, data):
     # login success
     player.sid = sid
     return {"status":200, "reason":"Login Successful"}
+
+
+@sio.event
+@anon_required
+@data_required("username", "password")
+async def register(sid, data):
+    p = Player.create(data["username"], data["password"])
+    if type(p)!=Player:
+        return {"status":400, "reason":p}
+    # register success
+    return {"status":200, "reason":f"{data['username']} Registration Successful"}
 
 
 @sio.event
@@ -73,6 +75,7 @@ def nameConfirm(*args):
 @sio.event
 async def message(sid, data):
     print('message:', data)
+
 
 @sio.on('*')
 async def catchAll(event, sid, data):

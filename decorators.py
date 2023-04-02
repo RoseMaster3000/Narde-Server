@@ -21,3 +21,17 @@ def anon_required(f):
             return {"status":401, "reason":'anonymity required'}
         return await f(*args, **kwargs)
     return wrapper
+
+def data_required(*args):
+    required = list(args)
+    def decorator(f):
+        @wraps(f)
+        async def wrapper(*args, **kwargs):
+            sid = args[0]
+            data = args[1]
+            fields = ", ".join(required)
+            if any([(key not in data) for key in required]):
+                 return {"status":422, "reason":f"[{f.__name__}] event requires [{fields}] fields"}
+            return await f(*args, **kwargs)
+        return wrapper
+    return decorator
