@@ -9,8 +9,8 @@ sio = socketio.AsyncServer(async_mode = 'asgi')
 app = socketio.ASGIApp(
     sio,
     static_files = {
-    '/': {'content_type': 'text/html', 'filename': 'index.html'}
-}
+        '/': {'content_type': 'text/html', 'filename': 'index.html'}
+    }
 )
 
 
