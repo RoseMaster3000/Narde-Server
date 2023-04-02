@@ -5,8 +5,15 @@ from Player import Player
 
 
 Player.startTable()
-sio = socketio.AsyncServer(async_mode='asgi')
-app = socketio.ASGIApp(sio)
+sio = socketio.AsyncServer(async_mode = 'asgi')
+app = socketio.ASGIApp(
+    sio,
+    static_files = {
+    '/': {'content_type': 'text/html', 'filename': 'index.html'}
+}
+)
+
+
 
 # verify dictionary contains specified keys (returns True if all keys exist)
 def verifyDict(dictionary, *args):
