@@ -45,7 +45,7 @@ async def login(sid, data):
 async def register(sid, data):
     p = Player.create(data["username"], data["password"])
     if type(p)!=Player:
-        return {"status":400, "reason":p}
+        return {"status":409, "reason":p}
     # register success
     return {"status":200, "reason":f"{data['username']} Registration Successful"}
 

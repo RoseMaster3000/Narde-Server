@@ -30,8 +30,10 @@ def data_required(*args):
             sid = args[0]
             data = args[1]
             fields = ", ".join(required)
+            if type(data) is not dict:
+                return {"status":400, "reason":f"[{f.__name__}] event expects dictionary (via JSON)"}
             if any([(key not in data) for key in required]):
-                 return {"status":422, "reason":f"[{f.__name__}] event requires [{fields}] fields"}
+                return {"status":422, "reason":f"[{f.__name__}] event expects [{fields}] fields"}
             return await f(*args, **kwargs)
         return wrapper
     return decorator
