@@ -32,7 +32,7 @@ def dict_factory(cursor, row):
 
 def querySQL(query, *data):
     # validate / sanatize args
-    if len(data)==1 and type(data[0])==list: data = tuple(data[0])
+    if len(data)==1 and type(data[0]) in [list,tuple]: data=tuple(data[0])
     if type(data)!=tuple: raise ValueError("querySQL expects arbitrarty args (*args)")
     qry = query.lower()
     # connect

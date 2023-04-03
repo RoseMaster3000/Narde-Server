@@ -36,18 +36,18 @@ async def login(sid, data):
         return {"status":401, "reason":player}
     # login success
     player.sid = sid
-    return {"status":200, "reason":"Login Successful"}
+    return {"status":200, "reason":"Login Successful", "username":player.username}
 
 
 @sio.event
 @anon_required
 @data_required("username", "password")
 async def register(sid, data):
-    p = Player.create(data["username"], data["password"])
-    if type(p)!=Player:
-        return {"status":409, "reason":p}
+    player = Player.create(data["username"], data["password"])
+    if type(player)!=Player:
+        return {"status":409, "reason":player}
     # register success
-    return {"status":200, "reason":f"{data['username']} Registration Successful"}
+    return {"status":200, "reason":f"Registration Successful", "username":player.username}
 
 
 @sio.event
