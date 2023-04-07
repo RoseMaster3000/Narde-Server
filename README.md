@@ -38,13 +38,14 @@ If you have not already, install the following
 * Update server `source deploy/update.sh`
 
 ### VPS Providers
+* PythonAnywhere does not [support Socket.io](https://www.pythonanywhere.com/forums/topic/27932/)
 * Low End [Hostinger](https://www.hostinger.com/vps-hosting) ($4/month)
 * High End [Google Cloud Platform](https://console.cloud.google.com/) ($30+/month)
 
 # Credits
 
 ### Documentation
-* [Python Socket.io - Transport Protocol](https://python-socketio.readthedocs.io/en/latest/intro.html) 
+* [Python Socket.io - Transport Protocol](https://python-socketio.readthedocs.io/en/latest/server.html) 
 * [SQLite3 - Database](https://docs.python.org/3/library/sqlite3.html)
 * [TrueSkill - Matchmaking Algorithm](https://trueskill.org/)
 * [Uvicorn - ASGI Server](https://www.uvicorn.org/)
