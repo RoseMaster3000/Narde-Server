@@ -1,2 +1,20 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Source files
+# ============
+*.py     text diff=python whitespace=tabwidth=4,converttabs
+*.pxd    text diff=python whitespace=tabwidth=4,converttabs
+*.py3    text diff=python whitespace=tabwidth=4,converttabs
+*.pyw    text diff=python whitespace=tabwidth=4,converttabs
+*.pyx    text diff=python whitespace=tabwidth=4,converttabs
+*.pyz    text diff=python whitespace=tabwidth=4,converttabs
+*.pyi    text diff=python whitespace=tabwidth=4,converttabs
+*.ipynb  text eol=lf
+
+# Binary files
+# ============
+*.db     binary
+*.p      binary
+*.pkl    binary
+*.pickle binary
+*.pyc    binary export-ignore
+*.pyo    binary export-ignore
+*.pyd    binary
