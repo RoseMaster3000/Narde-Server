@@ -4,12 +4,13 @@ from Player import Player
 def login_required(f):
     @wraps(f)
     async def wrapper(*args, **kwargs):
-        sid = args[0]
-        player = Player.get(sid)
+        player = Player.get(args[0])
         if player == None:
             return {"status":401, "reason":'authentication required'}
-        args = (*args, player)
-        return await f(*args, **kwargs)
+        kwargs["sid"] = args[0]
+        kwargs["data"] = args[1] if (len(args)>1) else {}
+        kwargs["player"] = player
+        return await f(**kwargs)
     return wrapper
 
 def anon_required(f):

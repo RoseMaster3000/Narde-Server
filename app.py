@@ -47,18 +47,20 @@ async def register(sid, data):
     if type(player)!=Player:
         return {"status":409, "reason":player}
     # register success
-    return {"status":200, "reason":f"Registration Successful", "username":player.username}
+    return {"status":200, "reason":"Registration Successful", "username":player.username}
 
 
 @sio.event
 @login_required
 async def logout(sid, data, player):
     player.sid = None
+    return {"message":"Logged out"}
 
 
 @sio.event
 @login_required
 async def whoami(sid, data, player):
+    print(data)
     await sio.emit(
         event = 'name',
         to = sid,
