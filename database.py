@@ -4,8 +4,7 @@ DBFILE = "Narde.db"
 
 def getException():
     _, _, tb = exc_info()
-    f = tb.tb_frame
-    fileName = f.f_code.co_filename
+    fileName = tb.tb_frame.f_code.co_filename
     lineNum = tb.tb_lineno
     return '{} : {}'.format(fileName, lineNum)
 
@@ -48,14 +47,14 @@ def querySQL(query, *data):
         if "insert" in qry:
             connection.commit()
             return cursor.lastrowid
-        elif ("select" or "show tables") in qry:
+        elif "select" in qry:
             result = res.fetchall()
-            if "limit 1" in qry and len(result)>0:
-                return result[0]
-            elif "limit 1" in qry and len(result)==0:
-                return None
+            if "limit 1" in qry:
+                return result[0] if len(result)>0 else None
             else:
                 return result
+        elif "show tables" in qry:
+            return listTables()
         else:
             connection.commit()
             return None
@@ -76,8 +75,6 @@ def listTables():
         "SELECT name FROM sqlite_schema "
         "WHERE type ='table' AND name NOT LIKE 'sqlite_%';"
     ))
-    tables = [table['name'] for table in result]
-    print(tables)
-    return tables
+    return [table['name'] for table in result]
 
 
