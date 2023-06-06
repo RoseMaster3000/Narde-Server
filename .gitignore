@@ -1,7 +1,7 @@
 # personal ignores
 *.sublime-workspace
 *.db
-
+*.secret
 
 # large build files
 static/builds/*
