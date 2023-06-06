@@ -3,7 +3,6 @@ from trueskill import Rating, rate_1vs1, quality_1vs1
 import bcrypt
 ALPHANUM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
-
 class Player:
     # reset Player use table
     @staticmethod
@@ -27,7 +26,7 @@ class Player:
         ))
         Player.create("shahrose", "123456")
 
-    # reset ephemeral Player columns (on server startup)
+    # reset ephemeral Player columns (server startup)
     @staticmethod
     def startTable():
         Player.createTable()
@@ -53,16 +52,19 @@ class Player:
 
     # Create/Fetch Player in database
     # if creation fails, returns error <String>
-    @staticmethod
-    def create(username, plainPassword):
+    @classmethod
+    def create(cls, username, plainPassword):
         if any([(char not in ALPHANUM) for char in username]):
             return "Username must be alphanumeric"
         if type(Player.fetch(username))==Player:
             return "User already exists"
         hashPassword = bcrypt.hashpw(plainPassword, bcrypt.gensalt())
-        query = "INSERT INTO players (username, password) VALUES (?,?);"
-        pid = querySQL(query, username, hashPassword)
-        return Player.fetch(username, plainPassword)
+        pid = querySQL(
+            "INSERT INTO players (username, password) VALUES (?,?);",
+            username,
+            hashPassword
+        )
+        return cls(querySQL("SELECT * FROM players WHERE id = ? LIMIT 1", pid))
 
     def __init__(self, dbDict):
         self.__id = dbDict["id"]
