@@ -33,7 +33,7 @@ def querySQL(query, *data):
     # validate / sanatize args
     if len(data)==1 and type(data[0]) in [list,tuple]: data=tuple(data[0])
     if type(data)!=tuple: raise ValueError("querySQL expects arbitrarty args (*args)")
-    qry = query.lower()
+    qry = query.lower().split()
     # connect
     connection = getConnection()
     cursor = connection.cursor()
@@ -44,12 +44,12 @@ def querySQL(query, *data):
         else:
             res = cursor.execute(query, data)
         # return query result (contextually)
-        if "insert" in qry:
+        if "insert" in qry or "update" in qry:
             connection.commit()
             return cursor.lastrowid
         elif "select" in qry:
             result = res.fetchall()
-            if "limit 1" in qry:
+            if "limit 1" in " ".join(qry):
                 return result[0] if len(result)>0 else None
             else:
                 return result
