@@ -4,7 +4,7 @@ from utility import debug as print
 from Player import Player
 
 
-Player.startTable()
+Player.startTable() # Player.resetTable()
 sio = socketio.AsyncServer(async_mode = 'asgi')
 app = socketio.ASGIApp(
     sio,
@@ -18,7 +18,6 @@ app = socketio.ASGIApp(
 async def connect(sid, environ):
     print('connect   ', sid)
 
-
 @sio.event
 async def disconnect(sid):
     player = Player.get(sid)
@@ -30,7 +29,6 @@ async def disconnect(sid):
 @anon_required
 @data_required("username", "password")
 async def login(sid, data):
-    # login error
     player = Player.fetch(data["username"], data["password"])
     if type(player)!=Player:
         return {"status":401, "reason":player}
@@ -43,6 +41,8 @@ async def login(sid, data):
 @anon_required
 @data_required("username", "password")
 async def register(sid, data):
+    if len(data["password"]) < 8:
+        return {"status":400, "reason":"Password must be 8 characters or longer."}
     player = Player.create(data["username"], data["password"])
     if type(player)!=Player:
         return {"status":409, "reason":player}
@@ -57,28 +57,26 @@ async def logout(sid, data, player):
     return {"message":"Logged out"}
 
 
+# Testing Client acknowledgments
 @sio.event
 @login_required
 async def whoami(sid, data, player):
-    print(data)
     await sio.emit(
         event = 'name',
         to = sid,
         data = {'username': player.username},
         callback = nameConfirm
     )
-    
+    return "whoami ack..."
 
 def nameConfirm(*args):
     print("[name] event acknowledged by client:", args)
 
 
-
+# Generic messages
 @sio.event
 async def message(sid, data):
     print('message:', data)
-
-
 @sio.on('*')
 async def catchAll(event, sid, data):
     print("[?]", f"({event})", data)
