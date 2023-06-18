@@ -12,9 +12,9 @@ If you have not already, install the following
 * Clone this repo `git clone git@github.com:RoseMaster3000/Narde-Server.git`
 
 ### Install
-1. First time setup `source setup.sh`
-2. Run `source test.sh` for development
-3. Run `source run.sh` for production
+1. First time setup `setup.sh`
+2. Run `test.sh` for uvicorn
+3. Run `testDev.sh` for uvicorn behind gunicorn
 
 ### Testing with Postman
 1. Install Postman `paru postman-bin` or download [here](https://www.postman.com/downloads/)
@@ -24,14 +24,20 @@ If you have not already, install the following
 5. Connect, test events, etc.
 
 # Server Deployment
+
 ### Initialization
-0. Download server code with `download.sh`
-1. Proofread `deploy/narde.service`, modify as needed
-2. Install Gunicorn service `source deploy/gunicorn.sh`
-3. Proofread `deploy/nginx.conf`, modify as needed
-4. Install NginX with `source deploy/nginx.sh`
-5. (optional) Install SSL (https://) with `source deploy/certbot.sh`
-6. (optional) Install Firewall with `source deploy/firewall.sh`
+1. Download git `sudo apt update && sudo apt install git`
+2. Download source code `git clone https://github.com/RoseMaster3000/Narde-Server.git`
+3. Install dependencies `source setup.sh`
+4. Sanity Test `source testProd.sh`
+5. Review Gunicorn service file `head deploy/narde.service`
+6. Install/Run Gunicorn service `source deploy/gunicorn.sh`
+7. Review NginX configs `head deploy/nginx.conf`
+8. Install/Run NginX with `source deploy/nginx.sh`
+
+### Optional
+* Install SSL (https://) with `source deploy/certbot.sh`
+* Install Firewall with `source deploy/firewall.sh`
 
 ### Maintenance
 * Start Server `source deploy/start.sh`
