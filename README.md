@@ -28,7 +28,8 @@ If you have not already, install the following
 ### Initialization
 1. Download git `sudo apt update && sudo apt install git`
 2. Download source code `git clone https://github.com/RoseMaster3000/Narde-Server.git`
-3. Install dependencies `source setup.sh`
+3. Install dependencies `apt-get install python3-venv
+ && source setup.sh`
 4. Sanity Test `source testProd.sh`
 5. Review Gunicorn service file `head deploy/narde.service`
 6. Install/Run Gunicorn service `source deploy/gunicorn.sh`
@@ -45,7 +46,7 @@ If you have not already, install the following
 * Update server `source deploy/update.sh`
 
 ### VPS Providers
-* PythonAnywhere does not [support Socket.io](https://www.pythonanywhere.com/forums/topic/27932/)
+* PythonAnywhere does not support Socket.io [yet](https://www.pythonanywhere.com/forums/topic/27932/)
 * Low End [Hostinger](https://www.hostinger.com/vps-hosting) ($4/month)
 * High End [Google Cloud Platform](https://console.cloud.google.com/) ($30+/month)
 
