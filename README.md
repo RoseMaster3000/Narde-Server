@@ -25,6 +25,7 @@ If you have not already, install the following
 
 # Server Deployment
 ### Initialization
+0. Download server code with `download.sh`
 1. Proofread `deploy/narde.service`, modify as needed
 2. Install Gunicorn service `source deploy/gunicorn.sh`
 3. Proofread `deploy/nginx.conf`, modify as needed
