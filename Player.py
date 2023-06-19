@@ -58,7 +58,7 @@ class Player:
             return "Username must be alphanumeric"
         if type(Player.fetch(username))==Player:
             return "User already exists"
-        hashPassword = bcrypt.hashpw(plainPassword, bcrypt.gensalt())
+        hashPassword = bcrypt.hashpw(plainPassword.encode('utf8'), bcrypt.gensalt())
         pid = querySQL(
             "INSERT INTO players (username, password) VALUES (?,?);",
             username,
@@ -113,7 +113,7 @@ class Player:
     def password(self): raise AttributeError("<Player.password> is not directly stored for security purposes.")
     @password.setter
     def password(self, value):
-        self.__hashPassword = bcrypt.hashpw(value, bcrypt.gensalt())
+        self.__hashPassword = bcrypt.hashpw(value.encode('utf8'), bcrypt.gensalt())
         querySQL("UPDATE players SET password = ? WHERE id = ?", self.__hashPassword, self.id)  
 
     @property
