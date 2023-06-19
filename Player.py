@@ -46,7 +46,7 @@ class Player:
         result = querySQL("SELECT * FROM players WHERE username = ? LIMIT 1", username)
         if result==None:
             return "User does not exist"
-        if plainPassword!=None and not bcrypt.checkpw(plainPassword, result["password"]):
+        if plainPassword!=None and not bcrypt.checkpw(plainPassword.encode('utf8'), result["password"]):
             return "Password is incorrect"
         return cls(result)
 
