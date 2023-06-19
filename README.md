@@ -12,9 +12,9 @@ If you have not already, install the following
 * Clone this repo `git clone git@github.com:RoseMaster3000/Narde-Server.git`
 
 ### Install
-1. First time setup `setup.sh`
-2. Run `test.sh` for uvicorn
-3. Run `testDev.sh` for uvicorn behind gunicorn
+1. First time setup `source setup.sh`
+2. Run `source test.sh` for uvicorn
+3. Run `source testDev.sh` for uvicorn behind gunicorn
 
 ### Testing with Postman
 1. Install Postman `paru postman-bin` or download [here](https://www.postman.com/downloads/)
