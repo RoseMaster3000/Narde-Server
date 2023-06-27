@@ -46,3 +46,10 @@ def data_required(*args):
             return await f(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def no_data(f):
+    @wraps(f)
+    async def wrapper(*args, **kwargs):
+        return await f(*args[:1], **kwargs)
+    return wrapper
