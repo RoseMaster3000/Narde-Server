@@ -1,8 +1,8 @@
 import socketio
 import random
 from asyncio import sleep as asyncSleep
-
-from decorators import login_required, anon_required, data_required, opponent_required
+from decorators import login_required, anon_required, opponent_required
+from decorators import data_required, no_data
 from utility import debug as print
 from Player import Player
 LFG = {} # keys: <Player> | value : DesiredGameType (str:"casualbackgammon")
@@ -17,7 +17,6 @@ app = socketio.ASGIApp(
         '/': {'content_type': 'text/html', 'filename': 'index.html'}
     }
 )
-
 
 @sio.event
 async def connect(sid, environ):
@@ -61,7 +60,8 @@ async def register(sid, data):
 
 @sio.event
 @login_required
-async def logout(sid, data, player):
+@no_data
+async def logout(sid, player):
     await quitSession(player)
     return {"message":"Logged out"}
 
@@ -75,7 +75,7 @@ async def quitSession(player):
 # Testing Client acknowledgments
 @sio.event
 @login_required
-async def whoami(sid, data, player):
+async def whoami(sid, player):
     print("whoami recieved...")
     await sio.emit(
         event = 'name',
@@ -138,7 +138,8 @@ async def matchmakeStart(sid, data, player):
 
 @sio.event
 @login_required
-async def matchmakeStop(sid, data, player):
+@no_data
+async def matchmakeStop(sid, player):
     LFG.pop(player, None)
     return {"status":200, "message":"Stopped looking for opponent."}
 
@@ -178,7 +179,7 @@ async def startGame(player, opponent, color, dice, gameFormat, gameMode):
 @sio.event
 @login_required
 @opponent_required
-async def winGame(sid, data, player):
+async def winGame(sid, player, opponent):
     player.beatOpponent()
     player.opponent.clearGame()
     player.clearGame()
