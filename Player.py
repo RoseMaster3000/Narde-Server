@@ -232,14 +232,14 @@ class Player:
 
     # have this player win (defeat another player)
     def beatOpponent(self, losingPlayer=None):
+        if losingPlayer==None: losingPlayer = self.opponent
         # resolve game
         if self.gameMode=="competetive":
-            if losingPlayer==None: losingPlayer = self.opponent
             self.rating, losingPlayer.rating = rate_1vs1(self.rating, losingPlayer.rating)
         elif self.gameMode=="casual":
             pass 
         elif self.gameMode=="casino":
-            self.opponent.loseTokens(self.gameWager)
+            losingPlayer.loseTokens(self.gameWager)
             self.gainTokens(self.gameWager)
 
     # clear all game-state related data
