@@ -1,10 +1,15 @@
 import socketio
-from decorators import login_required, anon_required, data_required
+import random
+from asyncio import sleep as asyncSleep
+
+from decorators import login_required, anon_required, data_required, opponent_required
 from utility import debug as print
 from Player import Player
+LFG = {} # keys: <Player> | value : DesiredGameType (str:"casualbackgammon")
 
 
-Player.startTable() # Player.resetTable()
+# Player.resetTable()
+Player.startTable() 
 sio = socketio.AsyncServer(async_mode = 'asgi')
 app = socketio.ASGIApp(
     sio,
@@ -21,9 +26,12 @@ async def connect(sid, environ):
 @sio.event
 async def disconnect(sid):
     player = Player.get(sid)
-    if player is not None: player.sid = None
+    if player is not None: await quitSession(player)
     print('disconnect', sid)
 
+###################################
+#  Account Management
+###################################
 
 @sio.event
 @anon_required
@@ -34,6 +42,7 @@ async def login(sid, data):
         return {"status":401, "reason":player}
     # login success
     player.sid = sid
+    player.clearGame()
     return {"status":200, "reason":"Login Successful", "username":player.username}
 
 
@@ -53,22 +62,28 @@ async def register(sid, data):
 @sio.event
 @login_required
 async def logout(sid, data, player):
-    player.sid = None
+    await quitSession(player)
     return {"message":"Logged out"}
+
+
+async def quitSession(player):
+    player.sid = None
+    LFG.pop(player, None)     # if queued for game, leave LFG
+    await player.abandon(sio) # if in game, abandon / notify opponent
 
 
 # Testing Client acknowledgments
 @sio.event
 @login_required
 async def whoami(sid, data, player):
+    print("whoami recieved...")
     await sio.emit(
         event = 'name',
         to = sid,
-        data = {'username': player.username},
+        data = {'name':player.username},
         callback = nameConfirm
     )
     return "whoami ack..."
-
 def nameConfirm(*args):
     print("[name] event acknowledged by client:", args)
 
@@ -81,6 +96,133 @@ async def message(sid, data):
 async def catchAll(event, sid, data):
     print("[?]", f"({event})", data)
 
+
+###################################
+#  Matchmaking / Looking For Game (LFG)
+###################################
+
+
+@sio.event
+@login_required
+@data_required("mode", "format")
+async def matchmakeStart(sid, data, player):
+    global LFG
+    # Validate matchmaking eligibility
+    if player.opponent!=None:
+        return {"status": 400, "reason":"You are already in a game!"}
+    if player in LFG:
+        return {"status": 400, "reason":"You are already looking for a game!"}
+    # Validate matchmaking request paramters
+    if data["format"] not in ["casual", "competetive", "casino"]:
+        return {"status": 400, "reason":"Unknown Game Format"}
+    if data["mode"] not in ["longgammon", "mini", "backgammon"]:
+        return {"status": 400, "reason":"Unknown Game Mode"}
+    if player in LFG:
+        return {"status": 400, "reason":"You are already looking for an opponent"}
+    
+    gametype = data['format'] + data['mode']
+
+    # look for opponent
+    opponent = None
+    for queuePlayer in LFG:
+        if LFG[queuePlayer] == gametype:
+            opponent = queuePlayer
+    # if opponent available, immediatly matchmake
+    if opponent != None:
+        await pairPlayers(opponent, player, data['format'], data['mode'])
+    # if not available, this player enters queue (LFG)
+    else:
+        LFG[player] = gametype
+        return {"status":200, "message":f"{player.username} looking for opponent..."}
+
+
+@sio.event
+@login_required
+async def matchmakeStop(sid, data, player):
+    LFG.pop(player, None)
+    return {"status":200, "message":"Stopped looking for opponent."}
+
+
+async def pairPlayers(playerA, playerB, gameFormat, gameMode):
+    LFG.pop(playerA, None)
+    LFG.pop(playerB, None)
+    dice = [1,2,3,4,5,6]
+    random.shuffle(dice)
+    dice = dice[:2]
+    if dice[0] > dice[1]: playerA.active=True
+    else: playerB.active=True
+
+    print(playerA)
+    print(playerB)
+
+    await startGame(playerA, playerB, "white", dice, gameFormat, gameMode)
+    await startGame(playerB, playerA, "black", dice, gameFormat, gameMode)
+    await emitDice(playerA, playerB)
+
+async def startGame(player, opponent, color, dice, gameFormat, gameMode):
+    player.opponent = opponent
+    player.gameFormat = gameFormat
+    player.gameMode = gameMode
+    await sio.emit(
+        event = 'startGame',
+        to = player.sid,
+        data = {
+            'gameMode': gameMode,
+            'you': player.username,
+            'opponent': opponent.username,
+            'color': color,
+            'firstDice': dice,
+        }
+    )
+
+@sio.event
+@login_required
+@opponent_required
+async def winGame(sid, data, player):
+    player.beatOpponent()
+    player.opponent.clearGame()
+    player.clearGame()
+
+###################################
+#  Relay Game Actions
+###################################
+
+
+@sio.event
+@login_required
+@opponent_required
+@data_required("actions")
+async def relayAction(sid, data, player, opponent):    
+    actions = data["actions"]
+    # reject action from non-active
+    if not player.active:
+        return {"status": 400, "reason":"It is not your turn"}
+
+    # relay actions from player -> opponent
+    await sio.emit(
+        event = 'opponentAction',
+        to = opponent.sid,
+        data = actions
+    )
+    # provide new dice (for opponent's incoming turn)
+    await emitDice(player, opponent)
+
+    # swap active player
+    player.active = False
+    opponent.active = True
+
+    return {"status": 200, "reason":"Your actions have been transmitted"}
+
+
+# provide (server side) dice results to player & opponent
+async def emitDice(playerA, playerB):
+    diceData = [random.randint(1,6), random.randint(1,6)]
+    for player in [playerA, playerB]:
+        await sio.emit(
+            event = 'nextDice',
+            to = player.sid,
+            data = diceData
+        )
 
 
 # https://www.youtube.com/watch?v=tHQvTOcx_Ys
