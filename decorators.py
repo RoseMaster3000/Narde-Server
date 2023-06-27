@@ -12,7 +12,6 @@ def login_required(f):
         return await f(*args, **kwargs)
     return wrapper
 
-
 def anon_required(f):
     @wraps(f)
     async def wrapper(*args, **kwargs):
@@ -23,6 +22,15 @@ def anon_required(f):
         return await f(*args, **kwargs)
     return wrapper
 
+def opponent_required(f):
+    @wraps(f)
+    async def wrapper(*args, **kwargs):
+        player = kwargs["player"]
+        if player.opponent == None:
+            return {"status":401, "reason":'opponent required'}
+        kwargs["opponent"] = player.opponent
+        return await f(*args, **kwargs)
+    return wrapper
 
 def data_required(*args):
     required = list(args)
