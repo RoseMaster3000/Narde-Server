@@ -50,9 +50,7 @@ event = 'relayAction'
 'actions': [ [11,2], [0,5] ]
 
 
-event = "lose"
 event = "win"
-
 
 # when player client wins
 # emit yout "relayAction"
