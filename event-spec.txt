@@ -1,0 +1,62 @@
+######################
+# SERVER >> client
+######################
+
+event = 'startGame',
+'gameMode': "backgammon"
+'you':      "rose"
+'opponent': "lior"
+'color':    "white"
+'firstDice': [4,5]
+'dice':      [5,1]
+
+event = "opponentQuit"
+
+
+event = 'opponentAction',
+[ [11,2], [0,5] ]
+[chip_index, dice_value]
+
+
+event = 'nextDice'
+'dice':     [2,2]
+
+event = 'name'
+        'shahrose'
+
+######################
+# CLIENT >> server
+######################
+event = 'whoami'
+event = 'logout'
+event = 'matchmakeStop'
+
+ 
+event = 'login'
+'username': 'shahrose'
+'password': 'pass'
+
+
+event = 'register'
+'username': 'lior'
+'password': 'secret1234'
+
+
+event = 'matchmakeStart'
+'mode': "longgammon"
+'format': "casual"
+
+event = 'relayAction'
+'actions': [ [11,2], [0,5] ]
+
+
+event = "lose"
+event = "win"
+
+
+# when player client wins
+# emit yout "relayAction"
+# also emit "winGame"
+
+# winners are responsible for cleanup
+# abandoner are responsible for cleanup
