@@ -7,7 +7,7 @@ def login_required(f):
         sid = args[0]
         player = Player.get(sid)
         if player == None:
-            return {"status":401, "reason":'authentication required'}
+            return {"status":401, "message":'authentication required'}
         kwargs["player"] = player
         return await f(*args, **kwargs)
     return wrapper
@@ -18,7 +18,7 @@ def anon_required(f):
         sid = args[0]
         player = Player.get(sid)
         if player != None:
-            return {"status":401, "reason":'anonymity required'}
+            return {"status":401, "message":'anonymity required'}
         return await f(*args, **kwargs)
     return wrapper
 
@@ -27,7 +27,7 @@ def opponent_required(f):
     async def wrapper(*args, **kwargs):
         player = kwargs["player"]
         if player.opponent == None:
-            return {"status":401, "reason":'opponent required'}
+            return {"status":401, "message":'opponent required'}
         kwargs["opponent"] = player.opponent
         return await f(*args, **kwargs)
     return wrapper
@@ -39,10 +39,10 @@ def data_required(*args):
         async def wrapper(*args, **kwargs):
             data = args[1]
             if type(data) is not dict:
-                return {"status":400, "reason":f"[{f.__name__}] event expects dictionary (via JSON)"}
+                return {"status":400, "message":f"[{f.__name__}] event expects dictionary (via JSON)"}
             if any([(key not in data) for key in required]):
                 fields = ", ".join(required)
-                return {"status":422, "reason":f"[{f.__name__}] event expects [{fields}] fields"}
+                return {"status":422, "message":f"[{f.__name__}] event expects [{fields}] fields"}
             return await f(*args, **kwargs)
         return wrapper
     return decorator
