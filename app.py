@@ -40,10 +40,21 @@ async def login(sid, data):
     player = Player.fetch(data["username"], data["password"])
     if type(player)!=Player:
         return {"status":401, "message":player}
+    if (player.sid != None):
+        return {"status":401, "message": f"{player.username} is logged in somewhere else."}
     # login success
     player.sid = sid
     player.clearGame()
     return {"status":200, "message":"Login Successful", "username":player.username}
+
+@sio.event
+@no_data
+async def relogin(sid):
+    player = Player.get(sid)
+    if player==None:
+        return {"status":666, "message":"Silent Error", "username":""}
+    else:
+        return {"status":200, "message":"Login Successful", "username":player.username}
 
 
 @sio.event
@@ -162,7 +173,7 @@ async def startGame(player, opponent, color, firstDice, nextDice, gameFormat, ga
     player.opponent = opponent
     player.gameFormat = gameFormat
     player.gameMode = gameMode
-    print("gameStart", firstDice, "|", nextDice)
+    print("gameStart", firstDice, "|", nextDice, "|", player)
     await sio.emit(
         event = 'startGame',
         to = player.sid,
@@ -193,9 +204,9 @@ async def winGame(sid, player, opponent):
 @sio.event
 @login_required
 @opponent_required
-@data_required("actions")
-async def relayAction(sid, data, player, opponent):    
-    actions = data["actions"]
+async def relayAction(sid, data, player, opponent):
+    # TODO: validate data (makey sure 2D list that uses dice values...)
+    print("ACTION", player.name, data)
     # reject action from non-active
     if not player.active:
         return {"status": 400, "message":"It is not your turn"}
@@ -204,7 +215,7 @@ async def relayAction(sid, data, player, opponent):
     await sio.emit(
         event = 'opponentAction',
         to = opponent.sid,
-        data = actions
+        data = data
     )
 
     # provide new dice (for opponent's incoming turn)
