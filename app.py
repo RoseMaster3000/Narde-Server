@@ -200,15 +200,15 @@ async def relayAction(sid, data, player, opponent):
     if not player.active:
         return {"status": 400, "message":"It is not your turn"}
 
-    # provide new dice (for opponent's incoming turn)
-    await emitDice(player, opponent)
-
     # relay actions from player -> opponent
     await sio.emit(
         event = 'opponentAction',
         to = opponent.sid,
         data = actions
     )
+
+    # provide new dice (for opponent's incoming turn)
+    await emitDice(player, opponent)
 
     # swap active player
     player.active = False
