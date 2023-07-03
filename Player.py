@@ -254,9 +254,10 @@ class Player:
     # have this player abandon a game (trigger opponent's victory on their behalf)
     async def abandon(self, sio):
         if self.opponent!=None:
-            await sio.emit(to=self.opponent.sid, event="opponentQuit")
-            self.opponent.beatOpponent()
-            self.opponent.clearGame()
+            if self.opponent.opponent!=None:
+                await sio.emit(to=self.opponent.sid, event="opponentQuit")
+                self.opponent.beatOpponent()
+                self.opponent.clearGame()
             self.clearGame()
 
 

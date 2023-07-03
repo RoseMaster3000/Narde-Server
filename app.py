@@ -78,12 +78,6 @@ async def logout(sid, player):
     return {"message":"Logged out"}
 
 
-async def quitSession(player):
-    player.sid = None
-    LFG.pop(player, None)     # if queued for game, leave LFG
-    await player.abandon(sio) # if in game, abandon / notify opponent
-
-
 # Testing Client acknowledgments
 @sio.event
 @login_required
@@ -188,13 +182,41 @@ async def startGame(player, opponent, color, firstDice, nextDice, gameFormat, ga
         }
     )
 
+###################################
+#  Game Terminations
+###################################
+
+@sio.event
+@login_required
+@opponent_required
+@no_data
+async def abandon(sid, player, opponent):
+    await player.abandon(sio)
+    return {"message": "you abandoned your opponent..."}
+
+@sio.event
+@login_required
+@opponent_required
+@no_data
+async def loseGame(sid, player, opponent):
+    player.clearGame()
+    return {"message": "You Lost!"}
+
+
 @sio.event
 @login_required
 @opponent_required
 async def winGame(sid, player, opponent):
     player.beatOpponent()
-    player.opponent.clearGame()
     player.clearGame()
+    return {"message": "You Win!"}
+
+
+async def quitSession(player):
+    player.sid = None         # clear socket id
+    LFG.pop(player, None)     # if queued for game, leave LFG
+    await player.abandon(sio) # if in game, abandon / notify opponent
+
 
 ###################################
 #  Relay Game Actions
