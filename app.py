@@ -18,6 +18,7 @@ app = socketio.ASGIApp(
     }
 )
 
+
 @sio.event
 async def connect(sid, environ):
     print('connect   ', sid)
@@ -38,11 +39,11 @@ async def disconnect(sid):
 async def login(sid, data):
     player = Player.fetch(data["username"], data["password"])
     if type(player)!=Player:
-        return {"status":401, "reason":player}
+        return {"status":401, "message":player}
     # login success
     player.sid = sid
     player.clearGame()
-    return {"status":200, "reason":"Login Successful", "username":player.username}
+    return {"status":200, "message":"Login Successful", "username":player.username}
 
 
 @sio.event
@@ -50,12 +51,12 @@ async def login(sid, data):
 @data_required("username", "password")
 async def register(sid, data):
     if len(data["password"]) < 8:
-        return {"status":400, "reason":"Password must be 8 characters or longer."}
+        return {"status":400, "message":"Password must be 8 characters or longer."}
     player = Player.create(data["username"], data["password"])
     if type(player)!=Player:
-        return {"status":409, "reason":player}
+        return {"status":409, "message":player}
     # register success
-    return {"status":200, "reason":"Registration Successful", "username":player.username}
+    return {"status":200, "message":"Registration Successful", "username":player.username}
 
 
 @sio.event
@@ -109,16 +110,16 @@ async def matchmakeStart(sid, data, player):
     global LFG
     # Validate matchmaking eligibility
     if player.opponent!=None:
-        return {"status": 400, "reason":"You are already in a game!"}
+        return {"status": 400, "message":"You are already in a game!"}
     if player in LFG:
-        return {"status": 400, "reason":"You are already looking for a game!"}
+        return {"status": 400, "message":"You are already looking for a game!"}
     # Validate matchmaking request paramters
     if data["format"] not in ["casual", "competetive", "casino"]:
-        return {"status": 400, "reason":"Unknown Game Format"}
+        return {"status": 400, "message":"Unknown Game Format"}
     if data["mode"] not in ["longgammon", "mini", "backgammon"]:
-        return {"status": 400, "reason":"Unknown Game Mode"}
+        return {"status": 400, "message":"Unknown Game Mode"}
     if player in LFG:
-        return {"status": 400, "reason":"You are already looking for an opponent"}
+        return {"status": 400, "message":"You are already looking for an opponent"}
     
     gametype = data['format'] + data['mode']
 
@@ -152,27 +153,27 @@ async def pairPlayers(playerA, playerB, gameFormat, gameMode):
     dice = dice[:2]
     if dice[0] > dice[1]: playerA.active=True
     else: playerB.active=True
+    nextDice = [random.randint(1,6), random.randint(1,6)]
+    await startGame(playerA, playerB, "white", dice, nextDice, gameFormat, gameMode)
+    await startGame(playerB, playerA, "black", dice, nextDice, gameFormat, gameMode)
 
-    print(playerA)
-    print(playerB)
 
-    await startGame(playerA, playerB, "white", dice, gameFormat, gameMode)
-    await startGame(playerB, playerA, "black", dice, gameFormat, gameMode)
-    await emitDice(playerA, playerB)
-
-async def startGame(player, opponent, color, dice, gameFormat, gameMode):
+async def startGame(player, opponent, color, firstDice, nextDice, gameFormat, gameMode):
     player.opponent = opponent
     player.gameFormat = gameFormat
     player.gameMode = gameMode
+    print("gameStart", firstDice, "|", nextDice)
     await sio.emit(
         event = 'startGame',
         to = player.sid,
         data = {
             'gameMode': gameMode,
+            'gameFormat': gameFormat,
             'you': player.username,
             'opponent': opponent.username,
             'color': color,
-            'firstDice': dice,
+            'firstDice': firstDice,
+            'nextDice': nextDice
         }
     )
 
@@ -197,7 +198,10 @@ async def relayAction(sid, data, player, opponent):
     actions = data["actions"]
     # reject action from non-active
     if not player.active:
-        return {"status": 400, "reason":"It is not your turn"}
+        return {"status": 400, "message":"It is not your turn"}
+
+    # provide new dice (for opponent's incoming turn)
+    await emitDice(player, opponent)
 
     # relay actions from player -> opponent
     await sio.emit(
@@ -205,19 +209,18 @@ async def relayAction(sid, data, player, opponent):
         to = opponent.sid,
         data = actions
     )
-    # provide new dice (for opponent's incoming turn)
-    await emitDice(player, opponent)
 
     # swap active player
     player.active = False
     opponent.active = True
 
-    return {"status": 200, "reason":"Your actions have been transmitted"}
+    return {"status": 200, "message":"Your actions have been transmitted"}
 
 
 # provide (server side) dice results to player & opponent
 async def emitDice(playerA, playerB):
     diceData = [random.randint(1,6), random.randint(1,6)]
+    print("emitDice", diceData)
     for player in [playerA, playerB]:
         await sio.emit(
             event = 'nextDice',
