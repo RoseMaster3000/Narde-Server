@@ -11,12 +11,18 @@ event = 'startGame',
 'firstDice': [4,5]
 'dice':      [5,1]
 
+
 event = "opponentQuit"
+# event = "gameOver"
+# 'color': "white"
+# 'winner': 
+# 'loser':
+# 'message': 'Opponent has left...' 
 
 
 event = 'opponentAction',
-[ [11,2], [0,5] ]
-[chip_index, dice_value]
+'actions': [ [11,2], [0,5] ]  #[chip_index, dice_value]
+'nextDice': [1,4]
 
 
 event = 'nextDice'
@@ -48,7 +54,8 @@ event = 'matchmakeStart'
 'format': "casual"
 
 event = 'relayAction'
-'actions': [ [11,2], [0,5] ]
+[ [11,2], [0,5] ]
+
 
 
 event = "winGame"

@@ -127,7 +127,7 @@ async def matchmakeStart(sid, data, player):
     # Validate matchmaking request paramters
     if data["format"] not in ["casual", "competetive", "casino"]:
         return {"status": 400, "message":"Unknown Game Format"}
-    if data["mode"] not in ["longgammon", "mini", "backgammon"]:
+    if data["mode"] not in ["longgammon", "mini", "backgammon", "debug"]:
         return {"status": 400, "message":"Unknown Game Mode"}
     if player in LFG:
         return {"status": 400, "message":"You are already looking for an opponent"}
@@ -206,38 +206,36 @@ async def winGame(sid, player, opponent):
 @opponent_required
 async def relayAction(sid, data, player, opponent):
     # TODO: validate data (makey sure 2D list that uses dice values...)
-    print("ACTION", player.name, data)
+    print("ACTION", player, data)
+
     # reject action from non-active
     if not player.active:
         return {"status": 400, "message":"It is not your turn"}
 
-    # relay actions from player -> opponent
+    nextDice = [random.randint(1,6), random.randint(1,6)]
+
+    # show player the dice for next turn (opponent's turn)
+    await sio.emit(
+        event = 'nextDice',
+        to = player.sid,
+        data = nextDice
+    )
+
+    # give opponent this players actions [AND] dice for next turn
     await sio.emit(
         event = 'opponentAction',
         to = opponent.sid,
-        data = data
+        data = {
+            "actions": data,
+            "nextDice": nextDice
+        }
     )
-
-    # provide new dice (for opponent's incoming turn)
-    await emitDice(player, opponent)
 
     # swap active player
     player.active = False
     opponent.active = True
 
     return {"status": 200, "message":"Your actions have been transmitted"}
-
-
-# provide (server side) dice results to player & opponent
-async def emitDice(playerA, playerB):
-    diceData = [random.randint(1,6), random.randint(1,6)]
-    print("emitDice", diceData)
-    for player in [playerA, playerB]:
-        await sio.emit(
-            event = 'nextDice',
-            to = player.sid,
-            data = diceData
-        )
 
 
 # https://www.youtube.com/watch?v=tHQvTOcx_Ys
