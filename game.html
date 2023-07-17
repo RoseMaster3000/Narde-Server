@@ -13,9 +13,9 @@
     </div>
 
 
+    <!-- UNITY ENGINE -->
     <script src="Build/WebGL.loader.js"></script>
     <script>
-      // UNITY ENGINE
       createUnityInstance(document.querySelector("#unity-canvas"), {
         dataUrl: "Build/WebGL.data",
         frameworkUrl: "Build/WebGL.framework.js",
@@ -34,11 +34,18 @@
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
         document.getElementsByTagName('head')[0].appendChild(meta);
         var canvas = document.querySelector("#unity-canvas");
-        var ratio = (462/1000);
-
-        canvas.style.width = window.innerWidth + "px";
-        canvas.style.height = Math.round(window.innerWidth*(462/1000)) + "px";
-
+        // portrait
+        if (window.innerWidth < window.innerHeight)
+        {
+          canvas.style.height = window.innerHeight + "px";
+          canvas.style.width = Math.round(window.innerHeight*(462/1000)) + "px";
+        }
+        // landscape
+        else
+        {
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = Math.round(window.innerWidth*(462/1000)) + "px";
+        }
         canvas.style.position = "fixed";
         document.body.style.textAlign = "left";
       }  
