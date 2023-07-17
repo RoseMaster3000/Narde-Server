@@ -34,17 +34,18 @@
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
         document.getElementsByTagName('head')[0].appendChild(meta);
         var canvas = document.querySelector("#unity-canvas");
+        var ratio = 462/1000;
         // portrait
         if (window.innerWidth < window.innerHeight)
         {
           canvas.style.height = window.innerHeight + "px";
-          canvas.style.width = Math.round(window.innerHeight*(462/1000)) + "px";
+          canvas.style.width = Math.round(window.innerHeight*ratio) + "px";
         }
         // landscape
         else
         {
           canvas.style.width = window.innerWidth + "px";
-          canvas.style.height = Math.round(window.innerWidth*(462/1000)) + "px";
+          canvas.style.height = Math.round(window.innerWidth*ratio) + "px";
         }
         canvas.style.position = "fixed";
         document.body.style.textAlign = "left";
