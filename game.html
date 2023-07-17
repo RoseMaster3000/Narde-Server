@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Narde</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #222222;">
+
+    <!-- UNITY CANVAS -->
+    <div id="container">
+      <canvas id="unity-canvas" style="margin: 0; padding: 0; background-color: #222222;"></canvas>
+    </div>
+
+
+    <script src="Build/WebGL.loader.js"></script>
+    <script>
+      // UNITY ENGINE
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/WebGL.data",
+        frameworkUrl: "Build/WebGL.framework.js",
+        codeUrl: "Build/WebGL.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Narde",
+        productVersion: "0.1",
+      });
+
+      // WINDOW SCALER
+      function scaleGameWindow()
+      {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        var canvas = document.querySelector("#unity-canvas");
+        var ratio = (462/1000);
+
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = Math.round(window.innerWidth*(462/1000)) + "px";
+
+        canvas.style.position = "fixed";
+        document.body.style.textAlign = "left";
+      }  
+      scaleGameWindow();
+      window.addEventListener('resize', function() {scaleGameWindow();});
+    </script>
+  </body>
+</html>
+
+
+<!-- VERTICAL CENTERING -->
+<style type="text/css">
+  #container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  }
+</style>
