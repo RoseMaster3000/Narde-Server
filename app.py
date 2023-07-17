@@ -16,6 +16,7 @@ app = socketio.ASGIApp(
     static_files = {
         '/': {'content_type': 'text/html', 'filename': 'index.html'},
         '/game': {'content_type': 'text/html', 'filename': 'game.html'},
+        '/icon': {'content_type': '"image/x-icon"', 'filename': 'icon.png'},
         '/Build': './Build'
     }
 )
