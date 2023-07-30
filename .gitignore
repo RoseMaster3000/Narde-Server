@@ -4,6 +4,7 @@
 *.secret
 
 # large build files
+Build/
 static/builds/*
 deployments/
 depl/
