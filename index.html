@@ -1,3 +1,82 @@
-<h1>Narde Socket.io Server is Online</h1>
-<p>v0.12</p>
-<a href="/game">Play Here!</a>
+<h1>Narde Website + Socket.io Server </h1>
+<a class="button-74" role="button" href="/game">Play Now!</a>
+
+<h3>Known Issues</h3>
+<ul>
+    <li>Matchmaking on WebGL not working?</li>
+    <li>Virtual keyboard on Mobile not showing up? (can't login)</li>
+</ul>
+
+
+<h3>0.12</h3>
+<ul>
+    <li>Added Version number in bottom corner of Local Game Screen
+    <li>Added gzip compression to speed up initial WebGL load time</li>
+    <li>WebGL + Mobile platform now triggers fullscreen</li>
+    <li>Added in-engine pillar+letterboxing</li>
+    <li>HTML pillar+letterboxxing improved (game should scale better on mobile browsers)
+    <li>fixed 6 in a row bug</li>
+</ul>
+
+
+<h3>0.11</h3>
+<ul>
+    <li>Auto mode can now bear off chips</li>
+    <li>Connection error window fixed (shows up after enter/exit a game)</li>
+    <li>6 in a row updated (but still wrong?)</li>
+</ul>
+
+<h3>0.10</h3>
+<ul>
+    <li>First Release! Some known bugs: </li>
+    <li>6 in a row feature disabled (its buggy)</li>
+    <li>Login connection error window buggy after entering/exiting a game</li>
+    <li>Auto mode can not bear off chips consistently</li>
+</ul>
+
+
+
+<style type="text/css">
+
+
+html {
+  color: white;
+  background-color: #231f20;
+}
+
+.button-74 {
+  background-color: #40260A;
+  border: 2px solid #fbeee0;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #fbeee0;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 18px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-74:hover {
+  background-color: #382301;
+}
+
+.button-74:active {
+  color: black;
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-74 {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+</style>

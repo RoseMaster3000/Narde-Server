@@ -20,18 +20,44 @@
       <canvas id="unity-canvas" style="margin:0; padding:0; background-color:#231f20;"></canvas>
     </div>
 
-    <!-- UNITY ENGINE -->
     <script src="Build/WebGL.loader.js"></script>
     <script>
+
+      // // Standard engine
+      // createUnityInstance(document.querySelector("#unity-canvas"), {
+      //   dataUrl: "Build/WebGL.data",
+      //   frameworkUrl: "Build/WebGL.framework.js",
+      //   codeUrl: "Build/WebGL.wasm",
+      //   streamingAssetsUrl: "StreamingAssets",
+      //   companyName: "DefaultCompany",
+      //   productName: "Narde"
+      // });
+
+
+      // // GZIP engine
+      // createUnityInstance(document.querySelector("#unity-canvas"), {
+      //   dataUrl: "Build/WebGL.data.gz",
+      //   frameworkUrl: "Build/WebGL.framework.js.gz",
+      //   codeUrl: "Build/WebGL.wasm.gz",
+      //   streamingAssetsUrl: "StreamingAssets",
+      //   companyName: "DefaultCompany",
+      //   productName: "Narde",
+      //   productVersion: "0.12",
+      //   matchWebGLToCanvasSize: true,
+      // });
+
+
+      // UNITY Web
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/WebGL.data",
-        frameworkUrl: "Build/WebGL.framework.js",
-        codeUrl: "Build/WebGL.wasm",
+        dataUrl: "Build/WebGL.data.unityweb",
+        frameworkUrl: "Build/WebGL.framework.js.unityweb",
+        codeUrl: "Build/WebGL.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Narde",
-        productVersion: "0.1",
+        productVersion: "0.12",
       });
+
 
       // WINDOW SCALER
       function scaleGameWindow()
@@ -42,23 +68,31 @@
         document.getElementsByTagName('head')[0].appendChild(meta);
         var canvas = document.querySelector("#unity-canvas");
         var ratio = 462/1000;
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
         // portrait
-        if (window.innerWidth < window.innerHeight)
+        if (h > w)
         {
-          canvas.style.height = window.innerHeight + "px";
-          canvas.style.width = Math.round(window.innerHeight*ratio) + "px";
+          canvas.style.height = h + "px";
+          canvas.style.width = Math.min(w, Math.round(h * ratio)) + "px";
         }
         // landscape
         else
         {
-          canvas.style.width = window.innerWidth + "px";
-          canvas.style.height = Math.round(window.innerWidth*ratio) + "px";
+          canvas.style.width = w + "px";
+          canvas.style.height = Math.min(h, Math.round(w * ratio)) + "px";
         }
+
         canvas.style.position = "fixed";
         document.body.style.textAlign = "left";
       }  
       scaleGameWindow();
       window.addEventListener('resize', function() {scaleGameWindow();});
+
+
     </script>
+
+
   </body>
 </html>
