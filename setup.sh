@@ -10,4 +10,4 @@ pip install -r requirements.txt
 
 rm -rf "Build"
 mkdir "Build"
-megadl --path "Build" https://mega.nz/folder/CnwDwBjI#SF0jby2EEahtnFUuaMESCQ
+megadl --path "Build" https://mega.nz/folder/SvQzWTDQ#dnK-FyLH-0hqrz7BUvY4Sg
