@@ -1,6 +1,6 @@
 # Overview
 
-This is the dedicated server source code for the [Narde Unity Game](https://github.com/liormushiev/Narde).
+This is the dedicated server source code for the [Narde Unity Game](https://github.com/liormushiev/Narde). It also hosts a WebGL version of the Unity game, which can be turned into a makeshift iPhone app using [this method](https://ios.gadgethacks.com/how-to/turn-any-website-into-full-screen-app-your-iphone-0384426/).
 
 # Setup
 
