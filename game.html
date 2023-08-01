@@ -24,40 +24,6 @@
     <script src="Build/WebGL.loader.js"></script>
     <script>
 
-      // // Standard engine
-      // createUnityInstance(document.querySelector("#unity-canvas"), {
-      //   dataUrl: "Build/WebGL.data",
-      //   frameworkUrl: "Build/WebGL.framework.js",
-      //   codeUrl: "Build/WebGL.wasm",
-      //   streamingAssetsUrl: "StreamingAssets",
-      //   companyName: "DefaultCompany",
-      //   productName: "Narde"
-      // });
-
-
-      // // GZIP engine
-      // createUnityInstance(document.querySelector("#unity-canvas"), {
-      //   dataUrl: "Build/WebGL.data.gz",
-      //   frameworkUrl: "Build/WebGL.framework.js.gz",
-      //   codeUrl: "Build/WebGL.wasm.gz",
-      //   streamingAssetsUrl: "StreamingAssets",
-      //   companyName: "DefaultCompany",
-      //   productName: "Narde",
-      //   matchWebGLToCanvasSize: true,
-      // });
-
-
-      // UNITY Web
-      createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/WebGL.data.unityweb",
-        frameworkUrl: "Build/WebGL.framework.js.unityweb",
-        codeUrl: "Build/WebGL.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "Narde",
-      });
-
-
       // WINDOW SCALER
       function scaleGameWindow()
       {
@@ -85,10 +51,19 @@
 
         canvas.style.position = "fixed";
         document.body.style.textAlign = "left";
-      }  
-      scaleGameWindow();
-      window.addEventListener('resize', function() {scaleGameWindow();});
+      } 
 
+      // UNITY Web
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/WebGL.data.unityweb",
+        frameworkUrl: "Build/WebGL.framework.js.unityweb",
+        codeUrl: "Build/WebGL.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Narde",
+      }).then(scaleGameWindow);
+
+      window.addEventListener('resize', function() {scaleGameWindow();});
 
     </script>
 
