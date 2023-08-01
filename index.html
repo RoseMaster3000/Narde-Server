@@ -3,13 +3,13 @@
 
 <h3>Known Issues</h3>
 <ul>
-    <li>Matchmaking on WebGL not working (not reproducible?)</li>
-    <li>Virtual keyboard on Mobile not showing up? (can't login)</li>
+    <li>Matchmaking on WebGL sometimes doesn't work? (not reproducible...)</li>
 </ul>
 
 
 <h3>0.12</h3>
 <ul>
+    <li>username/password fields reworked for mobile (you can not login)</li>
     <li>Added Version number in bottom corner of Local Game Screen
     <li>Added GZIP compression to speed up initial WebGL load time</li>
     <li>Added in-engine pillar+letterbox</li>
@@ -44,6 +44,7 @@ html {
 }
 
 .button-74 {
+  min-width: 2vw;
   background-color: #40260A;
   border: 2px solid #fbeee0;
   border-radius: 30px;
@@ -52,8 +53,8 @@ html {
   cursor: pointer;
   display: inline-block;
   font-weight: 600;
-  font-size: 18px;
-  padding: 0 18px;
+  font-size: 5vw;
+  padding: 18px 28px;
   line-height: 50px;
   text-align: center;
   text-decoration: none;
@@ -72,10 +73,5 @@ html {
   transform: translate(2px, 2px);
 }
 
-@media (min-width: 768px) {
-  .button-74 {
-    min-width: 120px;
-    padding: 0 25px;
-  }
-}
+
 </style>
