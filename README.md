@@ -12,7 +12,7 @@ If you have not already, install the following
 * Clone this repo `git clone git@github.com:RoseMaster3000/Narde-Server.git`
 
 ### WebGL Build Hosting
-A WebGL build of the Unity game is expected to exist in `/Build` This can be downloaded with the `gameDL.sh`
+A WebGL build of the Unity game is expected to exist in `/Build` This can be transferred via FTP.
 
 ### Install
 1. First time setup `source setup.sh`
