@@ -55,12 +55,13 @@
 
       // UNITY Web
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/WebGL.data",
-        frameworkUrl: "Build/WebGL.framework.js",
-        codeUrl: "Build/WebGL.wasm",
+        dataUrl: "Build/WebGL.data.unityweb",
+        frameworkUrl: "Build/WebGL.framework.js.unityweb",
+        codeUrl: "Build/WebGL.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Narde",
+        productVersion: "0.14",
       }).then(scaleGameWindow);
 
       setTimeout(scaleGameWindow,1000);
