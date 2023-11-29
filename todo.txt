@@ -1,0 +1,32 @@
+Milestone #4.2
+
+
+Network sync issue (we had an issue where clients were out of sync with server, they didnt know whose turn it was? We can have clients ping the server to sync up if this happens?)
+    This could be a strange interaction with auto-end + no legal move?
+
+
+
+Bonus Dice are not rotated with landscape orientation
+
+
+6 IN a row streak was acting up? (add dev console to WebGL build?)
+    New 6 in a row method is simple: just ban 6 in a row until a chip has touched the final node
+
+
+Auto End + no legal moves causes game to get stuck
+    add a legal move check immediately after dice are rolled (not just after chip is moved)
+
+--------------------------------
+SOCIAL PAGE (main menu)
+--------------------------------
+
+Friend Request (text search)
+
+List of Pending Requests (Approve / Reject button)
+
+Friend List
+    Green Online (in menu)
+        Challenge button
+            Mini |or| Longgammon
+    Red Online (in game)
+    Grey Offline

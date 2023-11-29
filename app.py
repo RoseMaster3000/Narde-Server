@@ -169,6 +169,7 @@ async def startGame(player, opponent, color, firstDice, nextDice, gameFormat, ga
     player.opponent = opponent
     player.gameFormat = gameFormat
     player.gameMode = gameMode
+    player.color = color
     print("gameStart", firstDice, "|", nextDice, "|", player)
     await sio.emit(
         event = 'startGame',
@@ -232,8 +233,19 @@ async def relayAction(sid, data, player, opponent):
     # TODO: validate data (makey sure 2D list that uses dice values...)
     print("ACTION", player, data)
 
-    # reject action from non-active
     if not player.active:
+        # trigger board fixes (clinets seem out of sync?)
+        await sio.emit(
+            event = 'currentColor',
+            to = opponent.sid,
+            data = opponent.color
+        )
+        await sio.emit(
+            event = 'currentColor',
+            to = player.sid,
+            data = opponent.color
+        )
+        # reject action from non-active
         return {"status": 400, "message":"It is not your turn"}
 
     nextDice = [random.randint(1,6), random.randint(1,6)]

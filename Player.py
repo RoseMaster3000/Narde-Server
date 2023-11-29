@@ -87,6 +87,7 @@ class Player:
         self.__rating = Rating(dbDict['skillMu'], dbDict['skillSigma'])
         self.__sid = dbDict['sid']
         # game state
+        self.__color = None
         self.__opponent = dbDict['opponent']
         self.__active = dbDict['active']
         self.__gameMode = dbDict['gameMode']
@@ -245,6 +246,7 @@ class Player:
     # clear all game-state related data
     def clearGame(self):
         self.opponent = None
+        self.color = None
         self.active = False
         self.gameMode = None
         self.gameFormat = None
