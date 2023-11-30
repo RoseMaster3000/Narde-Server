@@ -1,8 +1,22 @@
 <h1>Narde Website + Socket.io Server </h1>
+
 <a class="button-74" role="button" href="/game">Play Now!</a>
 
-<h3>0.15</h3>
+<i>
+<h3>0.16 (planned)</h3>
 <ul>
+    <li>friendRequest : store in DB[relationships] {userA, userB, relationship(friend, pending)}</li>
+    <li>declineRequest (remove from DB, also pushStatusUpdate )</li>
+    <li>acceptRequest (update DB, also pushStatusUpdate )</li>
+    <li>friendList (get list of all friends / pending friends, as well as their status (in game/online/offline/pending)</li>
+    <li>pushStatusUpdate {newStatus} (server emit this every time a user enters a game, exits a game, goes online, goes offline)
+    <li>friendStatusUpdate {username, newStatus} (accept this every time a friend has their status updated)
+</ul>
+</i>
+
+<h3>0.15 [LIVE]</h3>
+<ul>
+    <li>Social Screen Added to main menu (non-functional, no backend routes exists on the server to support the UI yet)</li>
     <li>Network Sync Issues now resolve themselves</li>
     <li>Node Inversion tweaked (Black <-> White)</li>
     <li>Bonus Dice are spawned with correct rotation</li>
@@ -58,7 +72,9 @@ html {
   color: white;
   background-color: #231f20;
 }
-
+.hidden {
+  display: none;
+}
 .button-74 {
   min-width: 2vw;
   background-color: #40260A;
@@ -69,8 +85,8 @@ html {
   cursor: pointer;
   display: inline-block;
   font-weight: 600;
-  font-size: min(5vw, 100px);
-  padding: min(2vw, 50px);
+  font-size: 60px;
+  padding: 30px;
   line-height: 50px;
   text-align: center;
   text-decoration: none;
@@ -91,3 +107,19 @@ html {
 
 
 </style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',function() {
+    var expandLinks = document.querySelectorAll('.panel-heading .panel-title a ');
+
+    for(var i = 0; i < expandLinks.length; i++) {
+        expandLinks[i].addEventListener('click', function(event) {
+            console.log(event.currentTarget);
+            var selector = event.currentTarget.getAttribute("href");
+            var answersDiv = document.querySelector(selector);
+            answersDiv.classList.toggle('hidden');
+        });
+    }
+});
+</script>
