@@ -32,11 +32,15 @@ A WebGL build of the Unity game is expected to exist in `/Build` This can be tra
 1. Download git `sudo apt update && sudo apt install git`
 2. Download source code `git clone https://github.com/RoseMaster3000/Narde-Server.git`
 3. Install dependencies `apt-get install python3-venv
- && source setup.sh`
-4. Sanity Test `source testProd.sh`
-5. Review Gunicorn service file `head deploy/narde.service`
+ && source runSetup.sh`
+
+4a. Test gunicorn `source testGunicorn.sh`
+4b. Test uvicorn `source testUvicorn.sh`
+4c. Test gunicorn+uvicorn+LAN `source testBoth.sh`
+
+5. Review Gunicorn service file `nano deploy/narde.service`
 6. Install/Run Gunicorn service `source deploy/gunicorn.sh`
-7. Review NginX configs `head deploy/nginx.conf`
+7. Review NginX configs `nano deploy/nginx.conf`
 8. Install/Run NginX with `source deploy/nginx.sh`
 
 ### Optional
